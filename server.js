@@ -9,11 +9,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/reportsdb', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
+// Define the Report schema and model
 const reportSchema = new mongoose.Schema({
   type: String,
   reportname: String,
@@ -23,9 +25,10 @@ const reportSchema = new mongoose.Schema({
 
 const Report = mongoose.model('Report', reportSchema);
 
+// Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, 'uploads', 'reportsandreturns');
+    const uploadDir = path.join(__dirname, '..', 'apspcl', 'public', 'uploads', 'reportsandreturns');
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -40,10 +43,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+// Route to handle file uploads
 app.post('/api/reports', upload.single('file'), async (req, res) => {
   try {
     const { type, reportname, title } = req.body;
-    const filepath = req.file.path;
+    const filepath = `uploads/reportsandreturns/${req.file.filename}`;
 
     const report = new Report({
       type,
@@ -61,6 +65,7 @@ app.post('/api/reports', upload.single('file'), async (req, res) => {
   }
 });
 
+// Route to get all reports
 app.get('/api/reports', async (req, res) => {
   try {
     const reports = await Report.find({});
@@ -71,10 +76,10 @@ app.get('/api/reports', async (req, res) => {
   }
 });
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve static files from public/uploads
+app.use('/uploads', express.static(path.join(__dirname, '..', 'apspcl', 'public', 'uploads')));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-    
