@@ -5,6 +5,7 @@ const cors = require("cors");
 const connectDB = require("./db");
 const peopleRoutes = require("./routes/peopleRoutes");
 const reportRoutes = require("./routes/reportRoutes");
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -12,12 +13,17 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3000', // Allow requests from the Next.js frontend
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes
 app.use("/api/reports", reportRoutes);
 app.use("/api/people", peopleRoutes);
+app.use('/api/auth', authRoutes);
 
 // Serve static files from public/uploads
 app.use(
