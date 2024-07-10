@@ -14,10 +14,10 @@ connectDB();
 
 // Middleware
 const corsOptions = {
-  origin: 'http://127.0.0.1/', // Allow requests from the Next.js frontend
+  origin: 'http://localhost:3000/', // Allow requests from the Next.js frontend
   optionsSuccessStatus: 200,
 };
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 // Routes
