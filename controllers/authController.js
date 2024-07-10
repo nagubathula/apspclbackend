@@ -1,24 +1,11 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const axios = require('axios');
 
 exports.register = async (req, res) => {
-  const { name, email, password, captcha } = req.body;
+  const { name, email, password } = req.body;
 
   try {
-    // Verify CAPTCHA
-    const response = await axios.post(`https://www.google.com/recaptcha/api/siteverify`, null, {
-      params: {
-        secret: process.env.RECAPTCHA_SECRET_KEY,
-        response: captcha
-      }
-    });
-
-    if (!response.data.success) {
-      return res.status(400).json({ msg: 'CAPTCHA verification failed' });
-    }
-
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ msg: 'User already exists' });
@@ -43,21 +30,9 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  const { email, password, captcha } = req.body;
+  const { email, password } = req.body;
 
   try {
-    // Verify CAPTCHA
-    const response = await axios.post(`https://www.google.com/recaptcha/api/siteverify`, null, {
-      params: {
-        secret: process.env.RECAPTCHA_SECRET_KEY,
-        response: captcha
-      }
-    });
-
-    if (!response.data.success) {
-      return res.status(400).json({ msg: 'CAPTCHA verification failed' });
-    }
-
     let user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ msg: 'Invalid Credentials' });
