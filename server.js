@@ -6,6 +6,7 @@ const connectDB = require("./db");
 const peopleRoutes = require("./routes/peopleRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const authRoutes = require('./routes/authRoutes');
+const helmet = require('helmet'); // Import helmet for security headers
 
 const app = express();
 
@@ -19,6 +20,14 @@ const corsOptions = {
 };
 app.use(cors());
 app.use(express.json());
+app.use(helmet()); // Apply helmet to set various security headers
+
+// Additional security headers for clickjacking prevention
+app.use((req, res, next) => {
+  res.setHeader('X-Frame-Options', 'DENY'); // Prevent framing
+  res.setHeader('Content-Security-Policy', "frame-ancestors 'none';"); // Prevent framing
+  next();
+});
 
 // Routes
 app.use("/api/reports", reportRoutes);

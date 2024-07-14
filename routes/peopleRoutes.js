@@ -9,14 +9,7 @@ const { People } = require("../models");
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = path.join(
-      __dirname,
-      "..",
-      "..",
-      "apspcl",
-      "public",
-      "peopleData"
-    );
+    const uploadDir = path.join(__dirname, "..", "..", "apspcl", "public", "peopleData");
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -31,7 +24,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Route to handle file uploads
+// Route to handle file uploads and create a new person
 router.post("/", upload.single("file"), async (req, res) => {
   try {
     const { name, designation } = req.body;
@@ -63,4 +56,61 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Route to get a person by id
+router.get("/:id", async (req, res) => {
+  try {
+    const person = await People.findById(req.params.id);
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
+    }
+    res.status(200).json(person);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+// Route to update a person by id
+router.put("/:id", upload.single("file"), async (req, res) => {
+  try {
+    const { name, designation } = req.body;
+    let filepath;
+    if (req.file) {
+      filepath = `peopleData/${req.file.filename}`;
+    }
+
+    const updateData = { name, designation };
+    if (filepath) {
+      updateData.filepath = filepath;
+    }
+
+    const person = await People.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
+    }
+
+    res.status(200).json(person);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+// Route to delete a person by id
+router.delete("/:id", async (req, res) => {
+  console.log("Received DELETE request for ID:", req.params.id); // Log the ID
+  try {
+    const person = await People.findByIdAndDelete(req.params.id);
+    if (!person) {
+      return res.status(404).json({ message: "Person not found" });
+    }
+    res.status(200).json({ message: "Person deleted" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+
 module.exports = router;
+
