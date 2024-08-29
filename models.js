@@ -11,6 +11,18 @@ const reportSchema = new mongoose.Schema({
 
 const Report = mongoose.model("Report", reportSchema);
 
+const tenderSchema = new mongoose.Schema({
+  slNo: { type: Number, required: true },
+  officeOf: { type: String, required: true },
+  tenderNotification: { type: String, required: true },
+  description: { type: String, required: true },
+  corrigendum: { type: String, default: 'N/A' },
+  closingDate: { type: Date, required: true },
+  link: { type: String, required: true }
+});
+
+const Tender = mongoose.model("Tender", tenderSchema);
+
 // Define the People schema and model
 const peopleSchema = new mongoose.Schema({
   name: String,
@@ -20,4 +32,4 @@ const peopleSchema = new mongoose.Schema({
 
 const People = mongoose.model("People", peopleSchema);
 
-module.exports = { Report, People };
+module.exports = { Report, People,  Tender };
