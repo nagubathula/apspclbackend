@@ -5,8 +5,11 @@ const cors = require("cors");
 const connectDB = require("./db");
 const peopleRoutes = require("./routes/peopleRoutes");
 const reportRoutes = require("./routes/reportRoutes");
-const tenderRoutes = require("./routes/tenderRoutes");
+// const tenderRoutes = require("./routes/tenderRoutes");
+const tenderRoutes = require("./routes/apspcltenderRoutes");
+// const apspcltenderRoutes = require("./routes/apspcltenderRoutes");
 const authRoutes = require('./routes/authRoutes');
+const officeRoutes = require('./routes/officeRoutes')
 const helmet = require('helmet'); // Import helmet for security headers
 
 const app = express();
@@ -20,7 +23,7 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-app.use(cors(corsOptions)); // Use the defined cors options
+app.use(cors()); // Use the defined cors options
 app.use(express.json());
 app.use(helmet()); // Apply helmet to set various security headers
 
@@ -38,9 +41,11 @@ app.use(
 
 // Routes
 app.use("/api/reports", reportRoutes);
+// app.use("/api/tenders", tenderRoutes);
 app.use("/api/tenders", tenderRoutes);
 app.use("/api/people", peopleRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/offices', officeRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
