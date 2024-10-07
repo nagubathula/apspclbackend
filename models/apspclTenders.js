@@ -29,6 +29,16 @@ const tenderSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    viewStatus: { 
+        type: String, 
+        enum: ['public', 'private'], // Define it as an enum to only accept these two values
+        default: 'public' 
+      },
+      latestStatus: { 
+        type: String, 
+        enum: ['active', 'inactive'], // Define it as an enum
+        default: 'active' 
+      }
 }, {
     timestamps: true, // Automatically adds createdAt and updatedAt timestamps
 });

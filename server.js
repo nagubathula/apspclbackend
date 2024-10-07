@@ -7,6 +7,8 @@ const peopleRoutes = require("./routes/peopleRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 // const tenderRoutes = require("./routes/tenderRoutes");
 const tenderRoutes = require("./routes/apspcltenderRoutes");
+const newsRouter = require('./routes/news');
+const tendersRouter = require('./routes/tenders'); 
 // const apspcltenderRoutes = require("./routes/apspcltenderRoutes");
 const authRoutes = require('./routes/authRoutes');
 const officeRoutes = require('./routes/officeRoutes')
@@ -46,6 +48,8 @@ app.use("/api/tenders", tenderRoutes);
 app.use("/api/people", peopleRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/offices', officeRoutes);
+app.use('/api', newsRouter); 
+app.use('/api/latest', tendersRouter); // The news routes are now accessible via /api/news
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

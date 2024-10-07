@@ -4,8 +4,12 @@ const path = require('path');
 // Create a new tender
 exports.createTender = async (req, res) => {
     try {
-        const { category, officeOf, tenderNotification, description, corrigendum, closingDate } = req.body;
+        const { category, officeOf, tenderNotification, description, corrigendum, closingDate, viewStatus, latestStatus } = req.body;
         
+        // Validate viewStatus and latestStatus values
+        const validViewStatus = ['public', 'private'].includes(viewStatus) ? viewStatus : 'public';
+        const validLatestStatus = ['active', 'inactive'].includes(latestStatus) ? latestStatus : 'active';
+
         // Handle file upload
         const filePath = req.file ? `/uploads/tenders/${req.file.filename}` : null; // Set file path if file is uploaded
 
@@ -17,6 +21,8 @@ exports.createTender = async (req, res) => {
             corrigendum,
             closingDate,
             link: filePath,
+            viewStatus: validViewStatus,  // Set the valid viewStatus
+            latestStatus: validLatestStatus,  // Set the valid latestStatus
         });
 
         await newTender.save(); // Save the new tender to the database
@@ -57,9 +63,24 @@ exports.getTenderById = async (req, res) => {
 // Update a tender by ID
 exports.updateTender = async (req, res) => {
     const { id } = req.params;
+    const { category, officeOf, tenderNotification, description, corrigendum, closingDate, viewStatus, latestStatus } = req.body;
 
     try {
-        const updatedTender = await Tender.findByIdAndUpdate(id, req.body, { new: true }); // Update tender
+        // Validate viewStatus and latestStatus values
+        const validViewStatus = ['public', 'private'].includes(viewStatus) ? viewStatus : 'public';
+        const validLatestStatus = ['active', 'inactive'].includes(latestStatus) ? latestStatus : 'active';
+
+        const updatedTender = await Tender.findByIdAndUpdate(id, {
+            category,
+            officeOf,
+            tenderNotification,
+            description,
+            corrigendum,
+            closingDate,
+            viewStatus: validViewStatus,  // Update with the valid viewStatus
+            latestStatus: validLatestStatus,  // Update with the valid latestStatus
+        }, { new: true }); // Update tender with new data
+
         if (!updatedTender) {
             return res.status(404).json({ message: 'Tender not found' });
         }
