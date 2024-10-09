@@ -12,6 +12,7 @@ const tendersRouter = require('./routes/tenders');
 // const apspcltenderRoutes = require("./routes/apspcltenderRoutes");
 const authRoutes = require('./routes/authRoutes');
 const officeRoutes = require('./routes/officeRoutes')
+const downloadRoutes  = require('./routes/downloadRoutes')
 const helmet = require('helmet'); // Import helmet for security headers
 
 const app = express();
@@ -48,6 +49,7 @@ app.use("/api/tenders", tenderRoutes);
 app.use("/api/people", peopleRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/offices', officeRoutes);
+app.use('/api/downloads', downloadRoutes);
 app.use('/api', newsRouter); 
 app.use('/api/latest', tendersRouter); // The news routes are now accessible via /api/news
 
