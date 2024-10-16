@@ -12,6 +12,7 @@ const authRoutes = require('./routes/authRoutes');
 const officeRoutes = require('./routes/officeRoutes')
 const downloadRoutes  = require('./routes/downloadRoutes')
 const goosRouter = require('./routes/gooRoutes')
+const circularsRouter = require('./routes/circularRoutes')
 const helmet = require('helmet'); // Import helmet for security headers
 
 const app = express();
@@ -51,6 +52,7 @@ app.use('/api/downloads', downloadRoutes);
 app.use('/api', newsRouter); 
 app.use('/api/latest', tendersRouter);
 app.use('/api/goos', goosRouter); // The news routes are now accessible via /api/news
+app.use('/api/circulars', circularsRouter); // The news routes are now accessible via /api/news
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
