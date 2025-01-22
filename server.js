@@ -54,6 +54,37 @@ app.use('/api/latest', tendersRouter);
 app.use('/api/goos', goosRouter); // The news routes are now accessible via /api/news
 app.use('/api/circulars', circularsRouter); // The news routes are now accessible via /api/news
 
+app.use('/api/uploads', express.static('uploads'));
+
+// Use the npkunta downloads routes
+const npkuntadownloadsRouter = require("./routes/npkuntadownloadroutes");
+const npkuntainformationsRouter = require("./routes/npkuntainformationroutes");
+const npkuntalanddetailRouter = require("./routes/npkuntalanddetailroutes");
+
+app.use("/api", npkuntadownloadsRouter);
+app.use("/api", npkuntainformationsRouter);
+app.use("/api", npkuntalanddetailRouter);
+
+
+
+const kurnooldownloadsRouter = require("./routes/kurnooldownloadroutes");
+const kurnoolinformationsRouter = require("./routes/kurnoolinformationroutes");
+const kurnoollanddetailRouter = require("./routes/kurnoollanddetailroutes");
+
+
+app.use("/api", kurnooldownloadsRouter);
+app.use("/api", kurnoolinformationsRouter);
+app.use("/api", kurnoollanddetailRouter);
+
+
+const gaaliveedudownloadsRouter = require("./routes/gaaliveedudownloadroutes");
+const gaaliveeduinformationsRouter = require("./routes/gaaliveeduinformationroutes");
+const gaaliveedulanddetailRouter = require("./routes/gaaliveedulanddetailroutes");
+
+
+app.use("/api", gaaliveedudownloadsRouter);
+app.use("/api", gaaliveeduinformationsRouter);
+app.use("/api", gaaliveedulanddetailRouter);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
