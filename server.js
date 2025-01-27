@@ -88,6 +88,9 @@ app.use("/api/directors", boardOfDirectorsRoutes);
 const ImageRoutes = require("./routes/imageRoutes");
 app.use("/api/imageUrl", ImageRoutes);
 
+const menuRoutes = require("./routes/menuRoutes");
+app.use("/api/menus", menuRoutes);
+
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
