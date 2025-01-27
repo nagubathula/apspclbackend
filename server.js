@@ -85,6 +85,15 @@ const gaaliveedulanddetailRouter = require("./routes/gaaliveedulanddetailroutes"
 app.use("/api", gaaliveedudownloadsRouter);
 app.use("/api", gaaliveeduinformationsRouter);
 app.use("/api", gaaliveedulanddetailRouter);
+
+
+
+const ananthapuramudownloadsRouter = require("./routes/ananthapuramudownloadroutes");
+const ananthapuramuinformationsRouter = require("./routes/ananthapuramuinformationroutes");
+const ananthapuramulanddetailRouter = require("./routes/ananthapuramulanddetailroutes");
+app.use("/api", ananthapuramudownloadsRouter);
+app.use("/api", ananthapuramuinformationsRouter);
+app.use("/api", ananthapuramulanddetailRouter);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
