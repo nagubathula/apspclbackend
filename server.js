@@ -20,7 +20,6 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-
 app.use(cors()); // Use the defined cors options
 app.use(express.json());
 app.use(helmet()); // Apply helmet to set various security headers
@@ -86,7 +85,10 @@ app.use("/api", ananthapuramulanddetailRouter);
 const boardOfDirectorsRoutes = require("./routes/boardofdirectors");
 app.use("/api/directors", boardOfDirectorsRoutes);
 
-const PORT = process.env.PORT || 5000;
+const ImageRoutes = require("./routes/imageRoutes");
+app.use("/api/imageUrl", ImageRoutes);
+
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
