@@ -1,22 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const {
-  AnanthapuramuLandDetails,
-} = require("../../../models/ananthapuramuSchema");
+const { AnanthapuramuLandDetails } = require("../../../models/ananthapuramuSchema");
 const path = require("path");
-const fs = require("fs").promises;
+const fs = require("fs");
 const multer = require("multer");
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
-  destination: async (req, file, cb) => {
-    try {
-      const uploadPath = path.join(__dirname, "../uploads/ananthapuramu");
-      await fs.mkdir(uploadPath, { recursive: true });
-      cb(null, uploadPath);
-    } catch (error) {
-      cb(new Error("Failed to create upload directory"));
-    }
+  destination: (req, file, cb) => {
+    const uploadPath = path.join(__dirname, "../uploads/ananthapuramu");
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
@@ -40,16 +34,6 @@ const upload = multer({
 const uploadFile = async (req, res) => {
   try {
     const { villagename, govtland, assignedland, pattaland, total } = req.body;
-
-    if (!villagename || !govtland || !assignedland || !pattaland || !total) {
-      return res
-        .status(400)
-        .json({
-          error:
-            "All fields (villagename, govtland, assignedland, pattaland, total) are required.",
-        });
-    }
-
     const relativePath = req.file
       ? `uploads/ananthapuramu/${req.file.filename}`
       : "";
@@ -66,25 +50,17 @@ const uploadFile = async (req, res) => {
     await landdetail.save();
     res.status(201).json(landdetail);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Failed to upload file", details: error.message });
+    res.status(500).json({ error: "Failed to upload file" });
   }
 };
 
 // Get All LandDetails
 const getLandDetails = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query; // Added pagination
-    const landdetails = await AnanthapuramuLandDetails.find()
-      .skip((page - 1) * limit)
-      .limit(parseInt(limit));
-
+    const landdetails = await AnanthapuramuLandDetails.find();
     res.status(200).json(landdetails);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Failed to fetch land details", details: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -99,18 +75,16 @@ const deleteDownload = async (req, res) => {
     }
 
     const filePath = path.join(__dirname, "..", landdetail.path);
-    try {
-      await fs.unlink(filePath);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
       console.log("File deleted successfully");
-    } catch {
+    } else {
       console.log("File not found, skipping deletion");
     }
 
     res.status(200).json({ message: "Download deleted successfully." });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Failed to delete download", details: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -119,44 +93,40 @@ const updateDownload = async (req, res) => {
   try {
     const { id } = req.params;
     const { villagename, govtland, assignedland, pattaland, total } = req.body;
-
     const landdetail = await AnanthapuramuLandDetails.findById(id);
+
     if (!landdetail) {
       return res.status(404).json({ error: "Download not found." });
     }
 
+    let relativePath = landdetail.path;
     if (req.file) {
       const oldFilePath = path.join(__dirname, "..", landdetail.path);
-      try {
-        await fs.unlink(oldFilePath);
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
         console.log("Old file deleted successfully");
-      } catch {
-        console.log("Old file not found, skipping deletion");
       }
-      landdetail.path = `uploads/ananthapuramu/${req.file.filename}`;
+      relativePath = `uploads/ananthapuramu/${req.file.filename}`;
     }
 
-    landdetail.villagename = villagename || landdetail.villagename;
-    landdetail.govtland = govtland || landdetail.govtland;
-    landdetail.assignedland = assignedland || landdetail.assignedland;
-    landdetail.pattaland = pattaland || landdetail.pattaland;
-    landdetail.total = total || landdetail.total;
+    landdetail.villagename = villagename;
+    landdetail.govtland = govtland;
+    landdetail.assignedland = assignedland;
+    landdetail.pattaland = pattaland;
+    landdetail.total = total;
+    landdetail.path = relativePath;
 
     await landdetail.save();
+
     res.status(200).json(landdetail);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Failed to update land detail", details: error.message });
+    console.error("Error during file update:", error);
+    res.status(500).json({ error: "Failed to update landdetail" });
   }
 };
 
 // API Routes
-router.post(
-  "/ananthapuramulanddetails/upload",
-  upload.single("file"),
-  uploadFile
-);
+router.post("/ananthapuramulanddetails/upload", upload.single("file"), uploadFile);
 router.get("/ananthapuramulanddetails/landdetails", getLandDetails);
 router.delete("/ananthapuramulanddetails/landdetails/:id", deleteDownload);
 router.put(

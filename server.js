@@ -73,13 +73,15 @@ app.use("/api", gaaliveeduinformationsRouter);
 app.use("/api", gaaliveedulanddetailRouter);
 app.use("/api/gaaliveedurichtext", gaaliveeduRichTextRoutes);
 
-const ananthapuramudownloadsRouter = require("./routes/solarparks/ananthapuramu/ananthapuramudownloadroutes");
-const ananthapuramuinformationsRouter = require("./routes/solarparks/ananthapuramu/ananthapuramuinformationroutes");
-const ananthapuramulanddetailRouter = require("./routes/solarparks/ananthapuramu/ananthapuramulanddetailroutes");
+const ananthapuramudownloadsRouter = require("./routes/solarparks/ananthapuramu/downloadroutes");
+const ananthapuramuinformationsRouter = require("./routes/solarparks/ananthapuramu/informationroutes");
+const ananthapuramulanddetailRouter = require("./routes/solarparks/ananthapuramu/landdetailroutes");
+const ananthapuramuRichTextRoutes = require("./routes/solarparks/ananthapuramu/richtextroutes")
 
 app.use("/api", ananthapuramudownloadsRouter);
 app.use("/api", ananthapuramuinformationsRouter);
 app.use("/api", ananthapuramulanddetailRouter);
+app.use("/api/ananthapuramurichtext", ananthapuramuRichTextRoutes);
 
 const kurnooldownloadsRouter = require("./routes/solarparks/kurnool/downloadroutes");
 const kurnoolinformationsRouter = require("./routes/solarparks/kurnool/informationroutes");
@@ -90,6 +92,16 @@ app.use("/api", kurnooldownloadsRouter);
 app.use("/api", kurnoolinformationsRouter);
 app.use("/api", kurnoollanddetailRouter);
 app.use("/api/kurnoolrichtext", kurnoolRichTextRoutes);
+
+const kadapadownloadsRouter = require("./routes/solarparks/kadapa/downloadroutes");
+const kadapainformationsRouter = require("./routes/solarparks/kadapa/informationroutes");
+const kadapalanddetailRouter = require("./routes/solarparks/kadapa/landdetailroutes");
+const kadapaRichTextRoutes = require("./routes/solarparks/kadapa/richtextroutes")
+
+app.use("/api", kadapadownloadsRouter);
+app.use("/api", kadapainformationsRouter);
+app.use("/api", kadapalanddetailRouter);
+app.use("/api/kadaparichtext", kadapaRichTextRoutes);
 
 const boardOfDirectorsRoutes = require("./routes/boardofdirectors");
 app.use("/api/directors", boardOfDirectorsRoutes);

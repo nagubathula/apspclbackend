@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {
-  AnanthapuramuInformation,
-} = require("../../../models/ananthapuramuSchema");
+const { AnanthapuramuInformation } = require("../../../models/ananthapuramuSchema");
 const path = require("path");
 const fs = require("fs").promises;
 const multer = require("multer");
