@@ -1,5 +1,12 @@
 const mongoose = require("mongoose");
 
+const npkuntarichtextSchema = new mongoose.Schema({
+  title: { type: String, required: true, trim: true },
+  content: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+
 // Downloads Schema
 const npkuntadownloadsSchema = new mongoose.Schema({
   title: { type: String, required: true, trim: true },
@@ -36,4 +43,10 @@ const NpkuntaLandDetails = mongoose.model(
   npkuntalanddetailsSchema
 );
 
-module.exports = { NpkuntaDownloads, NpkuntaInformation, NpkuntaLandDetails };
+const NpkuntaRichText = mongoose.model(
+  "NpkuntaRichText",
+  npkuntarichtextSchema
+);
+
+
+module.exports = { NpkuntaDownloads, NpkuntaInformation, NpkuntaLandDetails, NpkuntaRichText };

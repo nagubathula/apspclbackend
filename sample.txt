@@ -1,0 +1,9 @@
+const npkuntadownloadsRouter = require("./routes/solarparks/npkunta/downloadroutes");
+const npkuntainformationsRouter = require("./routes/solarparks/npkunta/informationroutes");
+const npkuntalanddetailRouter = require("./routes/solarparks/npkunta/landdetailroutes");
+const npkuntaRichTextRoutes = require("./routes/solarparks/npkunta/richtextroutes")
+
+app.use("/api", npkuntadownloadsRouter);
+app.use("/api", npkuntainformationsRouter);
+app.use("/api", npkuntalanddetailRouter);
+app.use("/api/npkuntarichtext", npkuntaRichTextRoutes);

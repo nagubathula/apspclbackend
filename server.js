@@ -50,34 +50,33 @@ app.use("/api/latest", tendersRouter);
 app.use("/api/goos", goosRouter); // The news routes are now accessible via /api/news
 app.use("/api/circulars", circularsRouter); // The news routes are now accessible via /api/news
 app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
-// Use the npkunta downloads routes
-const npkuntadownloadsRouter = require("./routes/npkuntadownloadroutes");
-const npkuntainformationsRouter = require("./routes/npkuntainformationroutes");
-const npkuntalanddetailRouter = require("./routes/npkuntalanddetailroutes");
+
+
+const npkuntadownloadsRouter = require("./routes/solarparks/npkunta/downloadroutes");
+const npkuntainformationsRouter = require("./routes/solarparks/npkunta/informationroutes");
+const npkuntalanddetailRouter = require("./routes/solarparks/npkunta/landdetailroutes");
+const npkuntaRichTextRoutes = require("./routes/solarparks/npkunta/richtextroutes")
 
 app.use("/api", npkuntadownloadsRouter);
 app.use("/api", npkuntainformationsRouter);
 app.use("/api", npkuntalanddetailRouter);
+app.use("/api/npkuntarichtext", npkuntaRichTextRoutes);
 
-const kurnooldownloadsRouter = require("./routes/kurnooldownloadroutes");
-const kurnoolinformationsRouter = require("./routes/kurnoolinformationroutes");
-const kurnoollanddetailRouter = require("./routes/kurnoollanddetailroutes");
 
-app.use("/api", kurnooldownloadsRouter);
-app.use("/api", kurnoolinformationsRouter);
-app.use("/api", kurnoollanddetailRouter);
-
-const gaaliveedudownloadsRouter = require("./routes/gaaliveedudownloadroutes");
-const gaaliveeduinformationsRouter = require("./routes/gaaliveeduinformationroutes");
-const gaaliveedulanddetailRouter = require("./routes/gaaliveedulanddetailroutes");
+const gaaliveedudownloadsRouter = require("./routes/solarparks/gaaliveedu/gaaliveedudownloadroutes");
+const gaaliveeduinformationsRouter = require("./routes/solarparks/gaaliveedu/gaaliveeduinformationroutes");
+const gaaliveedulanddetailRouter = require("./routes/solarparks/gaaliveedu/gaaliveedulanddetailroutes");
+const gaaliveeduRichTextRoutes = require("./routes/solarparks/gaaliveedu/gaaliveedurichtextroutes")
 
 app.use("/api", gaaliveedudownloadsRouter);
 app.use("/api", gaaliveeduinformationsRouter);
 app.use("/api", gaaliveedulanddetailRouter);
+app.use("/api/gaaliveedurichtext", gaaliveeduRichTextRoutes);
 
-const ananthapuramudownloadsRouter = require("./routes/ananthapuramudownloadroutes");
-const ananthapuramuinformationsRouter = require("./routes/ananthapuramuinformationroutes");
-const ananthapuramulanddetailRouter = require("./routes/ananthapuramulanddetailroutes");
+const ananthapuramudownloadsRouter = require("./routes/solarparks/ananthapuramu/ananthapuramudownloadroutes");
+const ananthapuramuinformationsRouter = require("./routes/solarparks/ananthapuramu/ananthapuramuinformationroutes");
+const ananthapuramulanddetailRouter = require("./routes/solarparks/ananthapuramu/ananthapuramulanddetailroutes");
+
 app.use("/api", ananthapuramudownloadsRouter);
 app.use("/api", ananthapuramuinformationsRouter);
 app.use("/api", ananthapuramulanddetailRouter);

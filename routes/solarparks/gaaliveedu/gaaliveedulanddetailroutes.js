@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { KurnoolDownloads } = require("../models/kurnoolSchema");
+const { GaaliveeduLandDetails } = require("../../../models/gaaliveeduSchema");
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
@@ -8,7 +8,7 @@ const multer = require("multer");
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, "../uploads/kurnool");
+    const uploadPath = path.join(__dirname, "../uploads/gaaliveedu");
     fs.mkdirSync(uploadPath, { recursive: true });
     cb(null, uploadPath);
   },
@@ -33,26 +33,32 @@ const upload = multer({
 // File Upload Controller
 const uploadFile = async (req, res) => {
   try {
-    const { title } = req.body;
-    const relativePath = `uploads/kurnool/${req.file.filename}`; // Store relative path
+    const { villagename, govtland, assignedland, pattaland, total } = req.body;
+    const relativePath = req.file
+      ? `uploads/gaaliveedu/${req.file.filename}`
+      : "";
 
-    const download = new KurnoolDownloads({
-      title,
-      path: relativePath, // Save this in DB
+    const landdetail = new GaaliveeduLandDetails({
+      villagename,
+      govtland,
+      assignedland,
+      pattaland,
+      total,
+      path: relativePath,
     });
 
-    await download.save();
-    res.status(201).json(download);
+    await landdetail.save();
+    res.status(201).json(landdetail);
   } catch (error) {
     res.status(500).json({ error: "Failed to upload file" });
   }
 };
 
-// Get All Downloads
-const getDownloads = async (req, res) => {
+// Get All LandDetails
+const getLandDetails = async (req, res) => {
   try {
-    const downloads = await KurnoolDownloads.find();
-    res.status(200).json(downloads);
+    const landdetails = await GaaliveeduLandDetails.find();
+    res.status(200).json(landdetails);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -62,13 +68,13 @@ const getDownloads = async (req, res) => {
 const deleteDownload = async (req, res) => {
   try {
     const { id } = req.params;
-    const download = await KurnoolDownloads.findByIdAndDelete(id);
+    const landdetail = await GaaliveeduLandDetails.findByIdAndDelete(id);
 
-    if (!download) {
+    if (!landdetail) {
       return res.status(404).json({ error: "Download not found." });
     }
 
-    const filePath = path.join(__dirname, "..", download.path);
+    const filePath = path.join(__dirname, "..", landdetail.path);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
       console.log("File deleted successfully");
@@ -86,52 +92,45 @@ const deleteDownload = async (req, res) => {
 const updateDownload = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title } = req.body;
-    const download = await KurnoolDownloads.findById(id);
+    const { villagename, govtland, assignedland, pattaland, total } = req.body;
+    const landdetail = await GaaliveeduLandDetails.findById(id);
 
-    if (!download) {
+    if (!landdetail) {
       return res.status(404).json({ error: "Download not found." });
     }
 
-    // If a new file is uploaded, delete the old file and update the path
-    let relativePath = download.path; // Keep the old path initially
+    let relativePath = landdetail.path;
     if (req.file) {
-      // Get the absolute path of the old file
-      const oldFilePath = path.join(__dirname, "..", download.path);
-      console.log("Old file path:", oldFilePath);
-
-      // Check if the file exists before attempting to unlink
+      const oldFilePath = path.join(__dirname, "..", landdetail.path);
       if (fs.existsSync(oldFilePath)) {
         fs.unlinkSync(oldFilePath);
         console.log("Old file deleted successfully");
-      } else {
-        console.log("Old file does not exist, skipping deletion");
       }
-
-      // Set the new file's relative path
-      relativePath = `uploads/kurnool/${req.file.filename}`;
+      relativePath = `uploads/gaaliveedu/${req.file.filename}`;
     }
 
-    // Update the download information
-    download.title = title;
-    download.path = relativePath; // Update path if a new file is uploaded
+    landdetail.villagename = villagename;
+    landdetail.govtland = govtland;
+    landdetail.assignedland = assignedland;
+    landdetail.pattaland = pattaland;
+    landdetail.total = total;
+    landdetail.path = relativePath;
 
-    // Save the updated information
-    await download.save();
+    await landdetail.save();
 
-    res.status(200).json(download); // Respond with the updated download object
+    res.status(200).json(landdetail);
   } catch (error) {
     console.error("Error during file update:", error);
-    res.status(500).json({ error: "Failed to update download" });
+    res.status(500).json({ error: "Failed to update landdetail" });
   }
 };
 
 // API Routes
-router.post("/kurnooldownloads/upload", upload.single("file"), uploadFile);
-router.get("/kurnooldownloads/downloads", getDownloads);
-router.delete("/kurnooldownloads/downloads/:id", deleteDownload);
+router.post("/gaaliveedulanddetails/upload", upload.single("file"), uploadFile);
+router.get("/gaaliveedulanddetails/landdetails", getLandDetails);
+router.delete("/gaaliveedulanddetails/landdetails/:id", deleteDownload);
 router.put(
-  "/kurnooldownloads/downloads/:id",
+  "/gaaliveedulanddetails/landdetails/:id",
   upload.single("file"),
   updateDownload
 );

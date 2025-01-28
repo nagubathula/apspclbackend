@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { NpkuntaInformation } = require("../models/gaaliveeduSchema");
+const {
+  AnanthapuramuInformation,
+} = require("../../../models/ananthapuramuSchema");
 const path = require("path");
 const fs = require("fs").promises;
 const multer = require("multer");
@@ -8,7 +10,7 @@ const multer = require("multer");
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
-    const uploadPath = path.join(__dirname, "../uploads/gaaliveedu");
+    const uploadPath = path.join(__dirname, "../uploads/ananthapuramu");
     await fs.mkdir(uploadPath, { recursive: true });
     cb(null, uploadPath);
   },
@@ -36,8 +38,12 @@ const uploadFile = async (req, res) => {
       return res.status(400).json({ error: "Title and description required" });
     }
 
-    const relativePath = `uploads/gaaliveedu/${req.file.filename}`;
-    const information = new NpkuntaInformation({ title, description, path: relativePath });
+    const relativePath = `uploads/ananthapuramu/${req.file.filename}`;
+    const information = new AnanthapuramuInformation({
+      title,
+      description,
+      path: relativePath,
+    });
     await information.save();
 
     res.status(201).json(information);
@@ -50,7 +56,7 @@ const uploadFile = async (req, res) => {
 const getInformations = async (req, res) => {
   try {
     const { page = 1, limit = 5 } = req.query;
-    const informations = await NpkuntaInformation.find()
+    const informations = await AnanthapuramuInformation.find()
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
 
@@ -64,7 +70,7 @@ const getInformations = async (req, res) => {
 const deleteInformation = async (req, res) => {
   try {
     const { id } = req.params;
-    const information = await NpkuntaInformation.findByIdAndDelete(id);
+    const information = await AnanthapuramuInformation.findByIdAndDelete(id);
 
     if (!information) return res.status(404).json({ error: "File not found" });
 
@@ -82,7 +88,7 @@ const updateInformation = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description } = req.body;
-    const information = await NpkuntaInformation.findById(id);
+    const information = await AnanthapuramuInformation.findById(id);
 
     if (!information) return res.status(404).json({ error: "File not found" });
 
@@ -90,7 +96,7 @@ const updateInformation = async (req, res) => {
       const oldFilePath = path.join(__dirname, "..", information.path);
       await fs.unlink(oldFilePath).catch(() => null);
 
-      information.path = `uploads/gaaliveedu/${req.file.filename}`;
+      information.path = `uploads/ananthapuramu/${req.file.filename}`;
     }
 
     information.title = title;
@@ -104,9 +110,17 @@ const updateInformation = async (req, res) => {
 };
 
 // API Routes
-router.post("/gaaliveeduinformations/upload", upload.single("file"), uploadFile);
-router.get("/gaaliveeduinformations/informations", getInformations);
-router.delete("/gaaliveeduinformations/informations/:id", deleteInformation);
-router.put("/gaaliveeduinformations/informations/:id", upload.single("file"), updateInformation);
+router.post(
+  "/ananthapuramuinformations/upload",
+  upload.single("file"),
+  uploadFile
+);
+router.get("/ananthapuramuinformations/informations", getInformations);
+router.delete("/ananthapuramuinformations/informations/:id", deleteInformation);
+router.put(
+  "/ananthapuramuinformations/informations/:id",
+  upload.single("file"),
+  updateInformation
+);
 
 module.exports = router;

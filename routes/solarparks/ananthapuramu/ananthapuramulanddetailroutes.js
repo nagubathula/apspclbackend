@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { AnanthapuramuLandDetails } = require("../models/ananthapuramuSchema");
+const {
+  AnanthapuramuLandDetails,
+} = require("../../../models/ananthapuramuSchema");
 const path = require("path");
 const fs = require("fs").promises;
 const multer = require("multer");
@@ -42,10 +44,15 @@ const uploadFile = async (req, res) => {
     if (!villagename || !govtland || !assignedland || !pattaland || !total) {
       return res
         .status(400)
-        .json({ error: "All fields (villagename, govtland, assignedland, pattaland, total) are required." });
+        .json({
+          error:
+            "All fields (villagename, govtland, assignedland, pattaland, total) are required.",
+        });
     }
 
-    const relativePath = req.file ? `uploads/ananthapuramu/${req.file.filename}` : "";
+    const relativePath = req.file
+      ? `uploads/ananthapuramu/${req.file.filename}`
+      : "";
 
     const landdetail = new AnanthapuramuLandDetails({
       villagename,
@@ -59,7 +66,9 @@ const uploadFile = async (req, res) => {
     await landdetail.save();
     res.status(201).json(landdetail);
   } catch (error) {
-    res.status(500).json({ error: "Failed to upload file", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to upload file", details: error.message });
   }
 };
 
@@ -73,7 +82,9 @@ const getLandDetails = async (req, res) => {
 
     res.status(200).json(landdetails);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch land details", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to fetch land details", details: error.message });
   }
 };
 
@@ -97,7 +108,9 @@ const deleteDownload = async (req, res) => {
 
     res.status(200).json({ message: "Download deleted successfully." });
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete download", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to delete download", details: error.message });
   }
 };
 
@@ -132,14 +145,24 @@ const updateDownload = async (req, res) => {
     await landdetail.save();
     res.status(200).json(landdetail);
   } catch (error) {
-    res.status(500).json({ error: "Failed to update land detail", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to update land detail", details: error.message });
   }
 };
 
 // API Routes
-router.post("/ananthapuramulanddetails/upload", upload.single("file"), uploadFile);
+router.post(
+  "/ananthapuramulanddetails/upload",
+  upload.single("file"),
+  uploadFile
+);
 router.get("/ananthapuramulanddetails/landdetails", getLandDetails);
 router.delete("/ananthapuramulanddetails/landdetails/:id", deleteDownload);
-router.put("/ananthapuramulanddetails/landdetails/:id", upload.single("file"), updateDownload);
+router.put(
+  "/ananthapuramulanddetails/landdetails/:id",
+  upload.single("file"),
+  updateDownload
+);
 
 module.exports = router;

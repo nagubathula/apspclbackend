@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { NpkuntaInformation } = require("../models/npkuntaSchema");
+const { NpkuntaInformation } = require("../../../models/gaaliveeduSchema");
 const path = require("path");
 const fs = require("fs").promises;
 const multer = require("multer");
@@ -8,7 +8,7 @@ const multer = require("multer");
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
-    const uploadPath = path.join(__dirname, "../uploads/npkunta");
+    const uploadPath = path.join(__dirname, "../uploads/gaaliveedu");
     await fs.mkdir(uploadPath, { recursive: true });
     cb(null, uploadPath);
   },
@@ -36,8 +36,12 @@ const uploadFile = async (req, res) => {
       return res.status(400).json({ error: "Title and description required" });
     }
 
-    const relativePath = `uploads/npkunta/${req.file.filename}`;
-    const information = new NpkuntaInformation({ title, description, path: relativePath });
+    const relativePath = `uploads/gaaliveedu/${req.file.filename}`;
+    const information = new NpkuntaInformation({
+      title,
+      description,
+      path: relativePath,
+    });
     await information.save();
 
     res.status(201).json(information);
@@ -90,7 +94,7 @@ const updateInformation = async (req, res) => {
       const oldFilePath = path.join(__dirname, "..", information.path);
       await fs.unlink(oldFilePath).catch(() => null);
 
-      information.path = `uploads/npkunta/${req.file.filename}`;
+      information.path = `uploads/gaaliveedu/${req.file.filename}`;
     }
 
     information.title = title;
@@ -104,9 +108,17 @@ const updateInformation = async (req, res) => {
 };
 
 // API Routes
-router.post("/npkuntainformations/upload", upload.single("file"), uploadFile);
-router.get("/npkuntainformations/informations", getInformations);
-router.delete("/npkuntainformations/informations/:id", deleteInformation);
-router.put("/npkuntainformations/informations/:id", upload.single("file"), updateInformation);
+router.post(
+  "/gaaliveeduinformations/upload",
+  upload.single("file"),
+  uploadFile
+);
+router.get("/gaaliveeduinformations/informations", getInformations);
+router.delete("/gaaliveeduinformations/informations/:id", deleteInformation);
+router.put(
+  "/gaaliveeduinformations/informations/:id",
+  upload.single("file"),
+  updateInformation
+);
 
 module.exports = router;

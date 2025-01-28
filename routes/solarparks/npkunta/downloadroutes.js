@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { AnanthapuramuDownloads } = require("../models/ananthapuramuSchema");
+const { NpkuntaDownloads } = require("../../../models/npkuntaSchema");
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
@@ -8,7 +8,7 @@ const multer = require("multer");
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, "../uploads/ananthapuramu");
+    const uploadPath = path.join(__dirname, "../uploads/npkunta");
     fs.mkdirSync(uploadPath, { recursive: true });
     cb(null, uploadPath);
   },
@@ -34,9 +34,9 @@ const upload = multer({
 const uploadFile = async (req, res) => {
   try {
     const { title } = req.body;
-    const relativePath = `uploads/ananthapuramu/${req.file.filename}`; // Store relative path
+    const relativePath = `uploads/npkunta/${req.file.filename}`; // Store relative path
 
-    const download = new AnanthapuramuDownloads({
+    const download = new NpkuntaDownloads({
       title,
       path: relativePath, // Save this in DB
     });
@@ -51,7 +51,7 @@ const uploadFile = async (req, res) => {
 // Get All Downloads
 const getDownloads = async (req, res) => {
   try {
-    const downloads = await AnanthapuramuDownloads.find();
+    const downloads = await NpkuntaDownloads.find();
     res.status(200).json(downloads);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -62,7 +62,7 @@ const getDownloads = async (req, res) => {
 const deleteDownload = async (req, res) => {
   try {
     const { id } = req.params;
-    const download = await AnanthapuramuDownloads.findByIdAndDelete(id);
+    const download = await NpkuntaDownloads.findByIdAndDelete(id);
 
     if (!download) {
       return res.status(404).json({ error: "Download not found." });
@@ -87,7 +87,7 @@ const updateDownload = async (req, res) => {
   try {
     const { id } = req.params;
     const { title } = req.body;
-    const download = await AnanthapuramuDownloads.findById(id);
+    const download = await NpkuntaDownloads.findById(id);
 
     if (!download) {
       return res.status(404).json({ error: "Download not found." });
@@ -109,7 +109,7 @@ const updateDownload = async (req, res) => {
       }
 
       // Set the new file's relative path
-      relativePath = `uploads/ananthapuramu/${req.file.filename}`;
+      relativePath = `uploads/npkunta/${req.file.filename}`;
     }
 
     // Update the download information
@@ -127,11 +127,11 @@ const updateDownload = async (req, res) => {
 };
 
 // API Routes
-router.post("/ananthapuramudownloads/upload", upload.single("file"), uploadFile);
-router.get("/ananthapuramudownloads/downloads", getDownloads);
-router.delete("/ananthapuramudownloads/downloads/:id", deleteDownload);
+router.post("/npkuntadownloads/upload", upload.single("file"), uploadFile);
+router.get("/npkuntadownloads/downloads", getDownloads);
+router.delete("/npkuntadownloads/downloads/:id", deleteDownload);
 router.put(
-  "/ananthapuramudownloads/downloads/:id",
+  "/npkuntadownloads/downloads/:id",
   upload.single("file"),
   updateDownload
 );

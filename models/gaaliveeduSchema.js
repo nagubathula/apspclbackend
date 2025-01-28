@@ -1,5 +1,12 @@
 const mongoose = require("mongoose");
 
+const gaaliveedurichtextSchema = new mongoose.Schema({
+  title: { type: String, required: true, trim: true },
+  content: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+
 // Downloads Schema
 const gaaliveedudownloadsSchema = new mongoose.Schema({
   title: { type: String, required: true, trim: true },
@@ -36,4 +43,14 @@ const GaaliveeduLandDetails = mongoose.model(
   gaaliveedulanddetailsSchema
 );
 
-module.exports = { GaaliveeduDownloads, GaaliveeduInformation, GaaliveeduLandDetails };
+const GaaliveeduRichText = mongoose.model(
+  "GaaliveeduRichText",
+  gaaliveedurichtextSchema
+);
+
+module.exports = {
+  GaaliveeduDownloads,
+  GaaliveeduInformation,
+  GaaliveeduLandDetails,
+  GaaliveeduRichText,
+};
