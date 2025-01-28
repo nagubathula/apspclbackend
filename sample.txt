@@ -1,9 +1,9 @@
-const npkuntadownloadsRouter = require("./routes/solarparks/npkunta/downloadroutes");
-const npkuntainformationsRouter = require("./routes/solarparks/npkunta/informationroutes");
-const npkuntalanddetailRouter = require("./routes/solarparks/npkunta/landdetailroutes");
-const npkuntaRichTextRoutes = require("./routes/solarparks/npkunta/richtextroutes")
+const kurnooldownloadsRouter = require("./routes/solarparks/kurnool/downloadroutes");
+const kurnoolinformationsRouter = require("./routes/solarparks/kurnool/informationroutes");
+const kurnoollanddetailRouter = require("./routes/solarparks/kurnool/landdetailroutes");
+const kurnoolRichTextRoutes = require("./routes/solarparks/kurnool/richtextroutes")
 
-app.use("/api", npkuntadownloadsRouter);
-app.use("/api", npkuntainformationsRouter);
-app.use("/api", npkuntalanddetailRouter);
-app.use("/api/npkuntarichtext", npkuntaRichTextRoutes);
+app.use("/api", kurnooldownloadsRouter);
+app.use("/api", kurnoolinformationsRouter);
+app.use("/api", kurnoollanddetailRouter);
+app.use("/api/kurnoolrichtext", kurnoolRichTextRoutes);

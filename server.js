@@ -81,6 +81,16 @@ app.use("/api", ananthapuramudownloadsRouter);
 app.use("/api", ananthapuramuinformationsRouter);
 app.use("/api", ananthapuramulanddetailRouter);
 
+const kurnooldownloadsRouter = require("./routes/solarparks/kurnool/downloadroutes");
+const kurnoolinformationsRouter = require("./routes/solarparks/kurnool/informationroutes");
+const kurnoollanddetailRouter = require("./routes/solarparks/kurnool/landdetailroutes");
+const kurnoolRichTextRoutes = require("./routes/solarparks/kurnool/richtextroutes")
+
+app.use("/api", kurnooldownloadsRouter);
+app.use("/api", kurnoolinformationsRouter);
+app.use("/api", kurnoollanddetailRouter);
+app.use("/api/kurnoolrichtext", kurnoolRichTextRoutes);
+
 const boardOfDirectorsRoutes = require("./routes/boardofdirectors");
 app.use("/api/directors", boardOfDirectorsRoutes);
 
