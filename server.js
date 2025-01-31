@@ -112,6 +112,10 @@ app.use("/api/imageUrl", ImageRoutes);
 const menuRoutes = require("./routes/menuRoutes");
 app.use("/api/menus", menuRoutes);
 
+const solarparkRoutes = require('./routes/solarparks.routes'); 
+
+app.use('/api/solarparks', solarparkRoutes);
+
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
