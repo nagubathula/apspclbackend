@@ -116,6 +116,10 @@ const solarparkRoutes = require('./routes/solarparks.routes');
 
 app.use('/api/solarparks', solarparkRoutes);
 
+const awardRoutes = require('./routes/awardroutes'); // Import the award routes
+
+app.use('/api/awards', awardRoutes); // Prefix the routes with /api/awards
+
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
