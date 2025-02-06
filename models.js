@@ -1,15 +1,6 @@
 // models.js
 const mongoose = require("mongoose");
 
-// Define the Report schema and model
-const reportSchema = new mongoose.Schema({
-  type: String,
-  reportname: String,
-  title: String,
-  filepath: String,
-});
-
-const Report = mongoose.model("Report", reportSchema);
 
 const tenderSchema = new mongoose.Schema({
   slNo: { type: Number, required: true },
@@ -32,4 +23,4 @@ const peopleSchema = new mongoose.Schema({
 
 const People = mongoose.model("People", peopleSchema);
 
-module.exports = { Report, People,  Tender };
+module.exports = { People,  Tender };

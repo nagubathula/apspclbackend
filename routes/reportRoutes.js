@@ -1,87 +1,77 @@
 const express = require("express");
-const router = express.Router();
-const upload = require("../multerConfig");
-const { Report } = require("../models");
+const mongoose = require("mongoose");
+const multer = require("multer");
+const path = require("path");
+const Report = require("../models/Report"); // Adjust the path as necessary
 
-// Route to handle file uploads
+const router = express.Router();
+
+// Configure Multer for file uploads
+const storage = multer.diskStorage({
+  destination: "uploads/reports",
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
+
+// Create a new report
 router.post("/", upload.single("file"), async (req, res) => {
   try {
-    const { type, reportname, title } = req.body;
-    const filepath = `uploads/reportsandreturns/${req.file.filename}`;
-
-    const report = new Report({
-      type,
-      reportname,
-      title,
-      filepath,
-    });
-
+    const { name, title } = req.body;
+    const filePath = req.file ? req.file.path : "";
+    const report = new Report({ name, title, filePath });
     await report.save();
-
     res.status(201).json(report);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Route to get all reports
+// Get all reports
 router.get("/", async (req, res) => {
   try {
-    const reports = await Report.find({});
-    res.status(200).json(reports);
+    const reports = await Report.find();
+    res.json(reports);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Route to get a specific report by ID
+// Get a single report by ID
 router.get("/:id", async (req, res) => {
   try {
     const report = await Report.findById(req.params.id);
-    if (!report) {
-      return res.status(404).json({ message: "Report not found" });
-    }
-    res.status(200).json(report);
+    if (!report) return res.status(404).json({ error: "Report not found" });
+    res.json(report);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Route to update a report by ID
-// Route to update a report by ID
-router.put("/:id", async (req, res) => {
+// Update a report by ID
+router.put("/:id", upload.single("file"), async (req, res) => {
   try {
-    const { type, reportname, title, filepath } = req.body;
-    const report = await Report.findByIdAndUpdate(
-      req.params.id,
-      { type, reportname, title, filepath },
-      { new: true, runValidators: true }
-    );
-    if (!report) {
-      return res.status(404).json({ message: "Report not found" });
-    }
-    res.status(200).json(report);
+    const { name, title } = req.body;
+    const filePath = req.file ? req.file.path : undefined;
+    const updateData = filePath ? { name, title, filePath } : { name, title };
+    const report = await Report.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    if (!report) return res.status(404).json({ error: "Report not found" });
+    res.json(report);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ error: error.message });
   }
 });
 
-
-// Route to delete a report by ID
+// Delete a report by ID
 router.delete("/:id", async (req, res) => {
   try {
     const report = await Report.findByIdAndDelete(req.params.id);
-    if (!report) {
-      return res.status(404).json({ message: "Report not found" });
-    }
-    res.status(200).json({ message: "Report deleted successfully" });
+    if (!report) return res.status(404).json({ error: "Report not found" });
+    res.json({ message: "Report deleted successfully" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ error: error.message });
   }
 });
 
