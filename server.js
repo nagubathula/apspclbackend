@@ -5,6 +5,7 @@ const cors = require("cors");
 const connectDB = require("./db");
 const peopleRoutes = require("./routes/peopleRoutes");
 const reportRoutes = require("./routes/reportRoutes");
+const returnRoutes = require("./routes/apreturnRoutes");
 const tenderRoutes = require("./routes/apspcltenderRoutes");
 const newsRouter = require("./routes/news");
 const tendersRouter = require("./routes/tenders");
@@ -40,6 +41,7 @@ app.use(
 
 // Routes
 app.use("/api/reports", reportRoutes);
+app.use("/api/apreturns", returnRoutes);
 app.use("/api/tenders", tenderRoutes);
 app.use("/api/people", peopleRoutes);
 app.use("/api/auth", authRoutes);
