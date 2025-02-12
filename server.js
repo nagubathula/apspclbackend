@@ -122,6 +122,10 @@ const awardRoutes = require('./routes/awardroutes'); // Import the award routes
 
 app.use('/api/awards', awardRoutes); // Prefix the routes with /api/awards
 
+const galleryRoutes = require("./routes/gallery");
+
+app.use("/api/gallery", galleryRoutes);
+
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
