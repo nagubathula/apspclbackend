@@ -125,6 +125,9 @@ app.use('/api/awards', awardRoutes); // Prefix the routes with /api/awards
 const galleryRoutes = require("./routes/gallery");
 
 app.use("/api/gallery", galleryRoutes);
+const contactUsRoutes = require("./routes/contactUsRoutes")
+
+app.use('/api/contactus', contactUsRoutes);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
