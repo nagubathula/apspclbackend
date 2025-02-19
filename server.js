@@ -129,6 +129,10 @@ const contactUsRoutes = require("./routes/contactUsRoutes")
 
 app.use('/api/contactus', contactUsRoutes);
 
+const quickLinksRoutes = require("./routes/quicklinkRoutes");
+
+app.use("/api/quicklinks", quickLinksRoutes);
+
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
